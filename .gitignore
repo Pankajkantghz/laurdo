@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build output
+dist/
+build/
+*.tsbuildinfo
+
+# Generated Prisma client
+src/generated/
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+
+# AI tool & Prisma skill directories
+.agents/
+.claude/
+.cursor/
+.devin/
+.vscode/
+.idea/
+
+# Logs & OS clutter
+logs/
+*.log
+npm-debug.log*
+pnpm-debug.log*
+.DS_Store
+Thumbs.db
+*.swp
+
+# Test coverage
+coverage/
