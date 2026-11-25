@@ -1,8 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -10,4 +5,102 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+}
+
+enum WorkoutStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
+}
+
+enum MuscleCategory {
+  CHEST
+  SHOULDER
+  BACK
+  LEG
+  BICEPS_TRICEPS
+  ABS
+  FOREARMS
+  CARDIO
+  FLEXIBILITY
+  OTHER
+}
+
+enum MovementFocus {
+  BENCH_PRESS
+  DEADLIFT
+  BACK_SQUAT
+  SNATCH
+  CLEAN_AND_JERK
+  OTHER
+}
+
+model User {
+  id           String     @id @default(uuid())
+  email        String     @unique
+  passwordHash String     @map("password_hash")
+  name         String
+  createdAt    DateTime   @default(now()) @map("created_at")
+  workouts     Workout[]
+  exercises    Exercise[]
+
+  @@map("users")
+}
+
+model TokenDenylist {
+  jti       String   @id
+  expiresAt DateTime @map("expires_at")
+
+  @@index([expiresAt])
+  @@map("token_denylist")
+}
+
+model Exercise {
+  id               String            @id @default(uuid())
+  userId           String?           @map("user_id")
+  name             String
+  description      String?
+  category         MuscleCategory
+  movementFocus    MovementFocus?    @map("movement_focus")
+  createdAt        DateTime          @default(now()) @map("created_at")
+  user             User?             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workoutExercises WorkoutExercise[]
+
+  @@unique([userId, name])
+  @@index([category])
+  @@map("exercises")
+}
+
+model Workout {
+  id               String            @id @default(uuid())
+  userId           String            @map("user_id")
+  title            String
+  scheduledAt      DateTime          @map("scheduled_at")
+  status           WorkoutStatus     @default(PENDING)
+  comments         String?
+  createdAt        DateTime          @default(now()) @map("created_at")
+  updatedAt        DateTime          @updatedAt @map("updated_at")
+  user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  workoutExercises WorkoutExercise[]
+
+  @@index([userId, status, scheduledAt])
+  @@map("workouts")
+}
+
+model WorkoutExercise {
+  id          String   @id @default(uuid())
+  workoutId   String   @map("workout_id")
+  exerciseId  String   @map("exercise_id")
+  sets        Int
+  reps        Int
+  weight      Decimal  @db.Decimal(6, 2)
+  restSeconds Int?     @map("rest_seconds")
+  sortOrder   Int      @default(0) @map("sort_order")
+  isCompleted Boolean  @default(false) @map("is_completed")
+  workout     Workout  @relation(fields: [workoutId], references: [id], onDelete: Cascade)
+  exercise    Exercise @relation(fields: [exerciseId], references: [id], onDelete: Restrict)
+
+  @@index([workoutId, sortOrder])
+  @@index([exerciseId])
+  @@map("workout_exercises")
 }
