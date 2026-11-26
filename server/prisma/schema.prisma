@@ -57,6 +57,8 @@ model User {
   createdAt    DateTime   @default(now()) @map("created_at")
   workouts     Workout[]
   exercises    Exercise[]
+  dailyLogs    DailyLog[]
+  runs         Run[]
 
   @@map("users")
 }
@@ -117,4 +119,35 @@ model WorkoutExercise {
   @@index([workoutId, sortOrder])
   @@index([exerciseId])
   @@map("workout_exercises")
+}
+
+model DailyLog {
+  id       String   @id @default(uuid())
+  userId   String   @map("user_id")
+  date     DateTime @db.Date
+  calories Int      @default(0)
+  protein  Decimal  @default(0) @db.Decimal(6, 2)
+  carbs    Decimal  @default(0) @db.Decimal(6, 2)
+  fat      Decimal  @default(0) @db.Decimal(6, 2)
+  fibre    Decimal  @default(0) @db.Decimal(6, 2)
+  waterMl  Int      @default(0) @map("water_ml")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date])
+  @@map("daily_logs")
+}
+
+model Run {
+  id              String   @id @default(uuid())
+  userId          String   @map("user_id")
+  distanceKm      Decimal  @map("distance_km") @db.Decimal(6, 2)
+  durationSeconds Int      @map("duration_seconds")
+  caloriesBurned  Int?     @map("calories_burned")
+  ranAt           DateTime @default(now()) @map("ran_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, ranAt])
+  @@map("runs")
 }
