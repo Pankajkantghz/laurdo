@@ -3,7 +3,7 @@ import { config } from "./config";
 import { initLoaders } from "./loaders";
 
 
-async function startServer(): Promise<void> {
+const startServer = async (): Promise<void> => {
   const app = express();
   await initLoaders(app);
 
@@ -12,7 +12,7 @@ async function startServer(): Promise<void> {
       `Server running on http://localhost:${config.port}${config.apiPrefix}`,
     );
   });
-}
+};
 
 startServer().catch((err) => {
   console.error("Failed to start server:", err);
