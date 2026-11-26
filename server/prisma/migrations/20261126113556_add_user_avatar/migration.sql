@@ -1,0 +1,5 @@
+-- CreateEnum
+CREATE TYPE "AvatarId" AS ENUM ('AVATAR_01', 'AVATAR_02', 'AVATAR_03', 'AVATAR_04', 'AVATAR_05', 'AVATAR_06', 'AVATAR_07', 'AVATAR_08', 'AVATAR_09', 'AVATAR_10');
+
+-- AlterTable
+ALTER TABLE "users" ADD COLUMN     "avatar_id" "AvatarId" NOT NULL DEFAULT 'AVATAR_01';
