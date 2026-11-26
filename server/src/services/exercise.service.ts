@@ -13,7 +13,7 @@ export interface ListExercisesParams {
   scope?: "all" | "global" | "custom";
 }
 
-export async function listExercises(params: ListExercisesParams) {
+export const listExercises = async (params: ListExercisesParams) => {
   const { userId, q, category, movementFocus, scope = "all" } = params;
 
   const ownershipFilter: Prisma.ExerciseWhereInput =
@@ -45,4 +45,4 @@ export async function listExercises(params: ListExercisesParams) {
     },
     orderBy: [{ category: "asc" }, { name: "asc" }],
   });
-}
+};
