@@ -7,6 +7,19 @@ datasource db {
   provider = "postgresql"
 }
 
+enum AvatarId {
+  AVATAR_01
+  AVATAR_02
+  AVATAR_03
+  AVATAR_04
+  AVATAR_05
+  AVATAR_06
+  AVATAR_07
+  AVATAR_08
+  AVATAR_09
+  AVATAR_10
+}
+
 enum WorkoutStatus {
   PENDING
   COMPLETED
@@ -40,6 +53,7 @@ model User {
   email        String     @unique
   passwordHash String     @map("password_hash")
   name         String
+  avatarId     AvatarId   @default(AVATAR_01) @map("avatar_id")
   createdAt    DateTime   @default(now()) @map("created_at")
   workouts     Workout[]
   exercises    Exercise[]
