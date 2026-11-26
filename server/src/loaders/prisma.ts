@@ -8,6 +8,6 @@ const adapter = new PrismaPg(pool);
 
 export const prisma = new PrismaClient({ adapter });
 
-export async function connectDatabase(): Promise<void> {
+export const connectDatabase = async (): Promise<void> => {
   await prisma.$connect();
-}
+};
