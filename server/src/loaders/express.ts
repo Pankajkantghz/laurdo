@@ -2,7 +2,6 @@ import express, { Express, NextFunction, Request, Response } from "express";
 import { ZodError, z } from "zod";
 import { config } from "../config";
 import createApiRouter from "../api";
-import { authRouter } from "../api/routes/auth.route";
 
 export class AppError extends Error {
   public readonly statusCode: number;
@@ -20,8 +19,6 @@ export const initExpress = (app: Express): Express => {
   app.get(`${config.apiPrefix}/health`, (_req: Request, res: Response) => {
     res.status(200).json({ status: "ok" });
   });
-
-  app.use(`${config.apiPrefix}`, authRouter);
 
   app.use(config.apiPrefix, createApiRouter());
 
