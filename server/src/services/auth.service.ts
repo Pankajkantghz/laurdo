@@ -1,4 +1,5 @@
 import { config } from "../config";
+import type { AvatarId } from "../constants/avatars";
 import { prisma } from "../loaders/prisma.js";
 import bcrypt from "bcryptjs";
 import jwt, { JwtPayload, SignOptions } from "jsonwebtoken";
@@ -22,6 +23,7 @@ export const registerUser = async (input: {
   email: string;
   password: string;
   name: string;
+  avatarId?: AvatarId;
 }) => {
   const email = input.email.trim().toLowerCase();
   const existing = await prisma.user.findUnique({ where: { email } });
@@ -35,12 +37,13 @@ export const registerUser = async (input: {
       email,
       passwordHash,
       name: input.name,
-      
+      avatarId: input.avatarId,
     },
     select: {
       id: true,
       email: true,
       name: true,
+      avatarId: true,
       createdAt: true,
     },
   });
@@ -63,6 +66,7 @@ export const loginUser = async (input: { email: string; password: string }) => {
       id: user.id,
       email: user.email,
       name: user.name,
+      avatarId: user.avatarId,
       createdAt: user.createdAt,
     },
     token,

@@ -29,8 +29,10 @@ const loginSchema = z.object({
   password: z.string().min(1),
 });
 
+const route = Router();
+export const authRouter = route;
+
 export default (app: Router) => {
-  const route = Router();
   app.use("/auth", route);
 
 route.post(
