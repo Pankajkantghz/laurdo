@@ -11,8 +11,6 @@ import { isAuth } from "../middlewares/isAuth";
 import { AVATAR_IDS } from "../../constants/avatars";
 import { handleAuthError } from "../../utils/handleAuthError";
 
-export const authRouter = Router();
-
 const registerSchema = z.object({
   email: z.email(),
   password: z
@@ -31,7 +29,11 @@ const loginSchema = z.object({
   password: z.string().min(1),
 });
 
-authRouter.post(
+export default (app: Router) => {
+  const route = Router();
+  app.use("/auth", route);
+
+route.post(
   "/register",
   validate(registerSchema),
   async (req, res, next) => {
@@ -44,7 +46,7 @@ authRouter.post(
   },
 );
 
-authRouter.post(
+route.post(
   "/login",
   validate(loginSchema),
   async (req: Request, res: Response, next: NextFunction) => {
@@ -57,7 +59,7 @@ authRouter.post(
   },
 );
 
-authRouter.post(
+route.post(
   "/logout",
   isAuth,
   async (req: Request, res: Response, next: NextFunction) => {
@@ -74,3 +76,4 @@ authRouter.post(
     }
   },
 );
+};
