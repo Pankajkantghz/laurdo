@@ -106,7 +106,8 @@ model Workout {
 model WorkoutExercise {
   id          String   @id @default(uuid())
   workoutId   String   @map("workout_id")
-  exerciseId  String   @map("exercise_id")
+  exerciseId  String?  @map("exercise_id")
+  exerciseName String  @map("exercise_name")
   sets        Int
   reps        Int
   weight      Decimal  @db.Decimal(6, 2)
@@ -114,7 +115,7 @@ model WorkoutExercise {
   sortOrder   Int      @default(0) @map("sort_order")
   isCompleted Boolean  @default(false) @map("is_completed")
   workout     Workout  @relation(fields: [workoutId], references: [id], onDelete: Cascade)
-  exercise    Exercise @relation(fields: [exerciseId], references: [id], onDelete: Restrict)
+  exercise    Exercise? @relation(fields: [exerciseId], references: [id], onDelete: SetNull)
 
   @@index([workoutId, sortOrder])
   @@index([exerciseId])
