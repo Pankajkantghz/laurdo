@@ -31,18 +31,18 @@ const listExercisesQuerySchema = z.object({
   scope: z.enum(["all", "global", "custom"]).default("all"),
 });
 
-export const exercisesRouter = Router();
+export default (app: Router) => {
+  app.get("/exercises", async (req, res, next) => {
+    try {
+      const query = listExercisesQuerySchema.parse(req.query);
+      const exercises = await listExercises({
+        userId: req.user?.id,
+        ...query,
+      });
 
-exercisesRouter.get("/", async (req, res, next) => {
-  try {
-    const query = listExercisesQuerySchema.parse(req.query);
-    const exercises = await listExercises({
-      userId: req.user?.id,
-      ...query,
-    });
-
-    res.json({ data: exercises });
-  } catch (err) {
-    next(err);
-  }
-});
+      res.json({ data: exercises });
+    } catch (err) {
+      next(err);
+    }
+  });
+};
