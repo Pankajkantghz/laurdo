@@ -1,7 +1,7 @@
 import express, { Express, NextFunction, Request, Response } from "express";
 import { ZodError, z } from "zod";
 import { config } from "../config";
-import { exercisesRouter } from "../api/routes/exercise";
+import createApiRouter from "../api";
 import { authRouter } from "../api/routes/auth.route";
 
 export class AppError extends Error {
@@ -23,7 +23,7 @@ export const initExpress = (app: Express): Express => {
 
   app.use(`${config.apiPrefix}`, authRouter);
 
-  app.use(`${config.apiPrefix}/exercises`, exercisesRouter);
+  app.use(config.apiPrefix, createApiRouter());
 
   app.use((_req: Request, _res: Response, next: NextFunction) => {
     next(new AppError("Not found", 404));
